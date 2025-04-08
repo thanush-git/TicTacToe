@@ -11,8 +11,8 @@ const DisplayFunctions = (function () {
 
     function UserDialog() {
 
-        let getUser = 
-        `<dialog open id="input-dialog">
+        let getUser =
+            `<dialog open id="input-dialog">
             <form method="dialog" id="nameForm">
                 <label for="p1name">Enter Player 1 name</label>
                 <input type="text" name="p1name" id="p1name">
@@ -23,43 +23,50 @@ const DisplayFunctions = (function () {
                 <input type="submit" id="enter-button">
             </form>
         </dialog>`;
-    
+
         mainContainer.innerHTML = getUser;
-    
+
         const enterBtn = document.getElementById("enter-button");
 
         enterBtn.addEventListener("click", function (e) {
-            e.preventDefault(); 
-    
+            e.preventDefault();
+
             const p1name = document.getElementById("p1name").value.trim();
             const p2name = document.getElementById("p2name").value.trim();
-    
+
             players.player1.name = p1name;
             players.player2.name = p2name;
 
             document.getElementById("input-dialog").close();
             console.log(players);
+
+            DisplayFunctions.DisplayBoard();
         });
+
+        
     }
 
 
-    function DisplayBoard(){
+    function DisplayBoard() {
         mainContainer.innerHTML = "";
 
         const displayHTML = `
         <div class="display-container">
             <h1>TicTacToe</h1>
 
-            <div class="player-header">
-                <div class="player">
-                    <p id="player-1-name">Player 1</p>
-                    <p id="player-1-score">0</p>
-                </div>
-                <div class="player">
-                    <p id="player-2-name">Player 2</p>
-                    <p id="player-2-score">0</p>
-                </div>
-            </div>
+         <div class="player-header">
+    <div class="player">
+        <table>
+            <tr><td id="player-1-name"></td></tr>
+            <tr><td id="player-1-score"></td></tr>
+        </table>
+    </div>
+
+    <div class="player">
+        <table>
+            <tr><td id="player-2-name"></td></tr>
+            <tr><td id="player-2-score"></td></tr>
+        </table></div></div>
 
             <div class="game-board">
                 <div class="box" id="r0c1"></div>
@@ -76,6 +83,11 @@ const DisplayFunctions = (function () {
         `
 
         mainContainer.innerHTML = displayHTML;
+        const p1nameCard = document.getElementById("player-1-name");
+        const p2nameCard = document.getElementById("player-2-name");
+
+        p1nameCard.textContent = players.player1.name;
+        p2nameCard.textContent = players.player2.name;
     }
 
     return {
@@ -108,12 +120,6 @@ const gameBoard = (function () {
         //Calling the display method
         DisplayFunctions.DisplayBoard();
     }
-
-
-    function createPlayers() {
-        DisplayFunctions.UserDialog();
-    }
-    
 
     function userPositionPrompt() {
         const row = parseInt(prompt("Enter row (0,1,2)"));
@@ -164,28 +170,28 @@ const gameBoard = (function () {
     }
 
 
-    return { getGameBoard, createPlayers, userPositionPrompt, updateGameBoard, checkWinner }
+    return { getGameBoard, userPositionPrompt, updateGameBoard, checkWinner }
 })();
 
 
 const gameFlow = (function () {
     //Step 1, initialise player symbols
-    gameBoard.createPlayers();
-    console.log("players initialised successfully",players);
+    DisplayFunctions.UserDialog();
+    console.log("players initialised successfully", players);
     //step 2, show the board
-    gameBoard.getGameBoard();
+    
     //step3, logic for switching user turns
-//     let isGameOver = false;
-//     currentTurn = players.player1;
-//     while (isGameOver === false) {
-//         let position = gameBoard.userPositionPrompt();
-//         gameBoard.updateGameBoard(position.row, position.column, currentTurn.symbol)
-//         if (gameBoard.checkWinner() === true) {
-//             console.log(currentTurn.name + " Wins!");
-//             isGameOver = true;
-//         }
-//         currentTurn = currentTurn === players.player1 ? players.player2 : players.player1;
-//     }
+    //     let isGameOver = false;
+    //     currentTurn = players.player1;
+    //     while (isGameOver === false) {
+    //         let position = gameBoard.userPositionPrompt();
+    //         gameBoard.updateGameBoard(position.row, position.column, currentTurn.symbol)
+    //         if (gameBoard.checkWinner() === true) {
+    //             console.log(currentTurn.name + " Wins!");
+    //             isGameOver = true;
+    //         }
+    //         currentTurn = currentTurn === players.player1 ? players.player2 : players.player1;
+    //     }
 })
 
 
