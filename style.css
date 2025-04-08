@@ -1,0 +1,43 @@
+body{
+    margin: 0;
+    padding: 0;
+    background-color: #F1F1F2;
+    font-family: Roboto, sans-serif;
+}
+
+.main-container{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-board{
+    height: 20vw;
+    width: 20vw;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 5px;
+    background-color: black;
+}
+
+.box{
+    background-color: #F1F1F2;
+}
+
+.box:hover{
+    background-color: lightblue;
+}
+
+.display-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.player-header{
+    flex-direction: row;
+}
