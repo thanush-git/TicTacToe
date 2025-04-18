@@ -43,7 +43,7 @@ const DisplayFunctions = (function () {
             DisplayFunctions.DisplayBoard();
         });
 
-        
+
     }
 
 
@@ -69,15 +69,15 @@ const DisplayFunctions = (function () {
         </table></div></div>
 
             <div class="game-board">
+                <div class="box" id="r0c0"></div>
                 <div class="box" id="r0c1"></div>
                 <div class="box" id="r0c2"></div>
-                <div class="box" id="r0c3"></div>
+                <div class="box" id="r1c0"></div>
                 <div class="box" id="r1c1"></div>
                 <div class="box" id="r1c2"></div>
-                <div class="box" id="r1c3"></div>
+                <div class="box" id="r2c0"></div>
                 <div class="box" id="r2c1"></div>
                 <div class="box" id="r2c2"></div>
-                <div class="box" id="r2c3"></div>
             </div>
         </div>
         `
@@ -87,13 +87,32 @@ const DisplayFunctions = (function () {
         const p2nameCard = document.getElementById("player-2-name");
 
         p1nameCard.textContent = players.player1.name;
-        p2nameCard.textContent = players.player2.name;
+        p2nameCard.
+            textContent = players.player2.name;
+
+        //Call a function here that can loop the game logic
+        gameFlow.gameLoop();
+    }
+
+    function updateGameBoardDisplay() {
+        let gameboard = gameBoard.gameBoard;
+
+        for (let i = 0; i <= 2; i++) {
+            for (let j = 0; j <= 2; j++) {
+                let cellId = `r${i}c${j}`;
+                let cellElement = document.getElementById(cellId);
+                if (gameboard[i][j] !== "*") {
+                    cellElement.textContent = gameboard[i][j];
+                }
+            }
+        }
     }
 
     return {
         UserDialog,
         players,
-        DisplayBoard
+        DisplayBoard,
+        updateGameBoardDisplay
     };
 })();
 
@@ -170,30 +189,66 @@ const gameBoard = (function () {
     }
 
 
-    return { getGameBoard, userPositionPrompt, updateGameBoard, checkWinner }
+    return { gameBoard, getGameBoard, userPositionPrompt, updateGameBoard, checkWinner }
 })();
 
 
 const gameFlow = (function () {
-    //Step 1, initialise player symbols
-    DisplayFunctions.UserDialog();
-    console.log("players initialised successfully", players);
-    //step 2, show the board
-    
-    //step3, logic for switching user turns
-    //     let isGameOver = false;
-    //     currentTurn = players.player1;
-    //     while (isGameOver === false) {
-    //         let position = gameBoard.userPositionPrompt();
-    //         gameBoard.updateGameBoard(position.row, position.column, currentTurn.symbol)
-    //         if (gameBoard.checkWinner() === true) {
-    //             console.log(currentTurn.name + " Wins!");
-    //             isGameOver = true;
-    //         }
-    //         currentTurn = currentTurn === players.player1 ? players.player2 : players.player1;
-    //     }
-})
+    function initialiseGame() {
+        DisplayFunctions.UserDialog();
+        console.log("players initialised successfully", players);
+    }
+
+    function gameLoop() {
+        //Game loop starts only after the displayboard is created 
+        //step 1: wait for user interaction
+        console.log("gameloop started");
+        DisplayFunctions.updateGameBoardDisplay();
+        let gameOver = false;
+
+        let boxes = document.querySelectorAll(".box");
+        let currPlayer = players.player1;
+
+        callGame();
+
+        function callGame() {
+
+            console.log("Current Turn: ", currPlayer.name);
+            console.log("Current Symbol: ", currPlayer.symbol);
+
+            boxes.forEach(box => {
+                box.addEventListener("click", (e) => {
+                    if (gameOver !== true) {
+                        console.log(box.id);
+                        let i = Number(box.id[1]);
+                        let j = Number(box.id[3]);
+                        gameBoard.gameBoard[i][j] = currPlayer.symbol;
+                        DisplayFunctions.updateGameBoardDisplay();
+
+                        //Check if Game is over
+                        gameOver = gameBoard.checkWinner();
+
+                        //Logic to swap Players
+                        if (currPlayer == players.player1) {
+                            currPlayer = players.player2;
+                        }
+                        else {
+                            currPlayer = players.player1;
+                        }
+                    }
+                })
+            })
+        }
 
 
+    }
 
-gameFlow();
+
+    return {
+        initialiseGame,
+        gameLoop
+    }
+})();
+
+
+gameFlow.initialiseGame();

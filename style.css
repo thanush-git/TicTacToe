@@ -55,3 +55,11 @@ body{
     border: 1px solid black;
     padding: 8px;
 }
+
+.box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 900;
+    font-size: 40px;
+}
